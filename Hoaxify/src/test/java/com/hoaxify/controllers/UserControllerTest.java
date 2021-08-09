@@ -208,5 +208,28 @@ class UserControllerTest {
 		User user = new User();
 		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
 		assertThat(response.getBody().getValidationErrors().get("userName")).isEqualTo("Username cannot be null");
+	}	
+	
+	@Test
+	void PostUser_WhenUserIsInvalidLength_reciveGenericMessageErrorofSize() {
+		User user =  createValidUser();
+		user.setUserName("abd");
+		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
+		assertThat(response.getBody().getValidationErrors().get("userName")).isEqualTo("It must have minimum 4 and maximum 128 characters");
 	}
+	@Test
+	void PostUser_WhenPasswordIsNull_reciveMessageErrorPasswordISNULL() {
+		User user = new User();
+		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
+		assertThat(response.getBody().getValidationErrors().get("password")).isEqualTo("Cannot be null");
+	}
+	
+	@Test
+	void postUser_whenPasswordInvalidPattern_reciveInvalidPasswordMessagePattern() {
+		User user = createValidUser();
+		user.setPassword("alllowers");
+		ResponseEntity<ApiError> postSingUp = postSingUp(user, ApiError.class);
+		assertThat(postSingUp.getBody().getValidationErrors().get("password")).isEqualTo("Password must have at least one uppercase, one lowercase letter and one number");
+	}
+
 }
