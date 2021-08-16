@@ -175,8 +175,6 @@ class UserControllerTest {
 		ResponseEntity<Object> postSingUp = postSingUp(user, Object.class);
 		assertThat(postSingUp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
-	
-	 
 
 	@Test
 	void postUser_whenUserIsValid_passwordIsHashedInDatabase() {
@@ -202,34 +200,56 @@ class UserControllerTest {
 		assertThat(response.getBody().getValidationErrors().size()).isEqualTo(3);
 
 	}
-	
+
 	@Test
 	void PostUser_WhenUserIsNull_reciveMessageErrorUserNameISNULL() {
 		User user = new User();
 		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
 		assertThat(response.getBody().getValidationErrors().get("userName")).isEqualTo("Username cannot be null");
-	}	
-	
+	}
+
 	@Test
 	void PostUser_WhenUserIsInvalidLength_reciveGenericMessageErrorofSize() {
-		User user =  createValidUser();
+		User user = createValidUser();
 		user.setUserName("abd");
 		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
-		assertThat(response.getBody().getValidationErrors().get("userName")).isEqualTo("It must have minimum 4 and maximum 128 characters");
+		assertThat(response.getBody().getValidationErrors().get("userName"))
+				.isEqualTo("It must have minimum 4 and maximum 128 characters");
 	}
+
 	@Test
 	void PostUser_WhenPasswordIsNull_reciveMessageErrorPasswordISNULL() {
 		User user = new User();
 		ResponseEntity<ApiError> response = postSingUp(user, ApiError.class);
 		assertThat(response.getBody().getValidationErrors().get("password")).isEqualTo("Cannot be null");
 	}
-	
+
 	@Test
 	void postUser_whenPasswordInvalidPattern_reciveInvalidPasswordMessagePattern() {
 		User user = createValidUser();
 		user.setPassword("alllowers");
 		ResponseEntity<ApiError> postSingUp = postSingUp(user, ApiError.class);
-		assertThat(postSingUp.getBody().getValidationErrors().get("password")).isEqualTo("Password must have at least one uppercase, one lowercase letter and one number");
+		assertThat(postSingUp.getBody().getValidationErrors().get("password"))
+				.isEqualTo("Password must have at least one uppercase, one lowercase letter and one number");
+	}
+
+	@Test
+	void postUser_whenAnotherUserHasSameUserName_ReciveBadRewquest() {
+		userRepository.save(createValidUser());
+
+		User user = createValidUser();
+		ResponseEntity<Object> postSingUp = postSingUp(user, Object.class);
+
+		assertThat(postSingUp.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+	}
+
+	@Test
+	void postUser_WhenAnotherUserHasSameUserName_ReciveMessageDublicationUserName() {
+		userRepository.save(createValidUser());
+		User user = createValidUser();
+		ResponseEntity<ApiError> postSingUp = postSingUp(user, ApiError.class);
+		assertThat(postSingUp.getBody().getValidationErrors().get("userName")).isEqualTo("This name is in use");
 	}
 
 }
