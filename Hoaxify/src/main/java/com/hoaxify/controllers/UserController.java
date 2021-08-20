@@ -8,7 +8,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,8 +36,8 @@ public class UserController {
 	@ExceptionHandler({ MethodArgumentNotValidException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	ApiError handelValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-		ApiError apiError = new ApiError(400, "Validation Error", request.getServletPath());
-		BindingResult result = exception.getBindingResult();
+		var apiError = new ApiError(400, "Validation Error", request.getServletPath());
+		var result = exception.getBindingResult();
 		Map<String, String> validationErrors = new HashMap<>();
 		for (FieldError fieldError : result.getFieldErrors()) {
 			validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());

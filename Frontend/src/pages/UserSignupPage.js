@@ -1,6 +1,5 @@
 import React from "react";
-import { Component } from "react";
-
+import Input from "../components/input";
 export class UserSignupPage extends React.Component {
   state = {
     displayName: "",
@@ -48,42 +47,45 @@ export class UserSignupPage extends React.Component {
       <div className="container">
         <h1 className="text-center">Sign Up</h1>
         <div className="col-12  mb-3">
-          <label>Display Name</label>
-          <input
-            className="form-control"
+          <Input
+            label="Display Name"
             placeholder="Your display Name"
             value={this.state.displayName}
             onChange={this.onChangeDisplayName}
+            hasError={this.state.errors.displayName && true}
+            error={this.state.errors.displayName}
           />
-          <div className="invalid-feedbacke">
-            {this.state.errors.displayName}
-          </div>
         </div>
         <div className="col-12  mb-3">
-          <label> User Name</label>
-          <input
-            className="form-control"
+          <Input
+            label="User Name"
             placeholder="Your display UserName"
             value={this.state.userName}
             onChange={this.onChangeUserName}
+            hasError={this.state.errors.userName && true}
+            error={this.state.errors.userName}
           />
         </div>
         <div className="col-12 mb-3">
-          <label> Password</label>
-          <input
-            className="form-control"
+          <Input
+            label="Password"
             type="password"
             value={this.state.password}
             placeholder="Your display Password"
             onChange={this.onChangePassword}
+            hasError={this.state.errors.password && true}
+            error={this.state.errors.password}
           />
         </div>
         <div>
-          <label>Confirm Password</label>
-          <input
-            className="form-control"
+          <label></label>
+          <Input
+            label="Confirm Password"
             type="password"
             placeholder="Your display Confirm Password"
+            value={this.state.confirmPassword}
+            hasError={this.state.errors.confirmPassword && true}
+            error={this.state.errors.confirmPassword}
           />
         </div>
         <div className="text-center">

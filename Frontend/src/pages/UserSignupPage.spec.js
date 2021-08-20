@@ -179,5 +179,10 @@ describe("UserSignupPage", () => {
       const errorMessage = await screen.findByText("Cannot be null");
       expect(errorMessage).toBeInTheDocument();
     });
+
+    it("Submit button is not desabiled if Password and confirmPassword are the same", () => {
+      setupForSubmit();
+      expect(button).not.toBeDisabled();
+    });
   });
 });
