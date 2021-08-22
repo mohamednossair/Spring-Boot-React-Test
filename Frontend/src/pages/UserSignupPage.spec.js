@@ -180,9 +180,19 @@ describe("UserSignupPage", () => {
       expect(errorMessage).toBeInTheDocument();
     });
 
-    it("Submit button is not desabiled if Password and confirmPassword are the same", () => {
+    it("Submit button is not Disabled if Password and confirmPassword are the same", () => {
       setupForSubmit();
       expect(button).not.toBeDisabled();
+    });
+    it("Submit button is Disabled if Password and confirmPassword are the not same", () => {
+      setupForSubmit();
+      fireEvent.change(confirmPasswordInput, changeEvent("new-pass"));
+      expect(button).toBeDisabled();
+    });
+    it("Submit button is Disabled if confirmPassword  and Password are the not same", () => {
+      setupForSubmit();
+      fireEvent.change(passwordInput, changeEvent("new-pass"));
+      expect(button).toBeDisabled();
     });
   });
 });

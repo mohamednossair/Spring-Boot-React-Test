@@ -7,6 +7,7 @@ export class UserSignupPage extends React.Component {
     password: "",
     confirmPassword: "",
     pendingApiCall: false,
+    confirmPasswordRepeat: true,
     errors: {},
   };
 
@@ -19,7 +20,17 @@ export class UserSignupPage extends React.Component {
   };
 
   onChangePassword = (event) => {
-    this.setState({ password: event.target.value });
+    let value = event.target.value;
+    const confirmPasswordRepeat = this.state.confirmPassword === value;
+    this.setState({ password: value, confirmPasswordRepeat });
+  };
+  onChangeConfirmPassword = (event) => {
+    let value = event.target.value;
+    const confirmPasswordRepeat = this.state.password === value;
+    this.setState({
+      confirmPassword: value,
+      confirmPasswordRepeat,
+    });
   };
   onClickSignup = () => {
     const user = {
@@ -83,6 +94,7 @@ export class UserSignupPage extends React.Component {
             label="Confirm Password"
             type="password"
             placeholder="Your display Confirm Password"
+            onChange={this.onChangeConfirmPassword}
             value={this.state.confirmPassword}
             hasError={this.state.errors.confirmPassword && true}
             error={this.state.errors.confirmPassword}
@@ -93,7 +105,9 @@ export class UserSignupPage extends React.Component {
             className="btn btn-primary"
             type="submit"
             onClick={this.onClickSignup}
-            disabled={this.state.pendingApiCall}
+            disabled={
+              this.state.pendingApiCall || !this.state.confirmPasswordRepeat
+            }
           >
             <div className="spinner-border" role="status">
               <span className="visually-hidden">Loading...</span>
